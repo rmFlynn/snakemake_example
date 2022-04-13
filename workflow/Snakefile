@@ -2,3 +2,92 @@
 # Please follow the best practices: 
 # https://snakemake.readthedocs.io/en/stable/snakefiles/best_practices.html,
 # in particular regarding the standardized folder structure mentioned there. 
+
+import os
+from glob import glob
+import gzip
+import shutil
+import pandas as pd
+
+configfile: "config/config.yaml"
+
+R1 = config['binning']['forward_id']
+R2 = config['binning']['backward_id']
+PATHS = [i for p in config['inputs']['paired_reads'] for i in glob(p)]
+
+
+def ungz(path):
+    if path.endswith('.gz'):
+        return path.replace('.gz', '')
+    return path
+# return f"results/unziped_input/{os.path.basename(path).replace('.gz', '')}"
+
+def clean(string):
+    removable = [R1, R2, '.fastq', '.gz']
+    for i in removable:
+         string = string.replace(i, '')
+    return string
+   
+def find_match(name, files):
+    for i in files:
+        if clean(i) == name:
+            return i
+   
+
+def get_reads(paths):
+    # paths =  set([ungz(i) for i in  paths])
+    freads = [i for i in paths if R1 in i]
+    breads = [i for i in paths if R2 in i]
+    if len(freads) != len(breads):
+        raise ValueError("Somehow there is a read that has no pair."
+                        f"the forward reads are: {freads}"
+                        f"the reverse reads are: {breads}"
+                        )
+    names = [clean(i) for i in freads]
+    paths = {
+        os.path.basename(i):{'forward_gz': find_match(i, freads), 
+           'reversed_gz': find_match(i, breads)}
+        for i in names}
+    for i in paths:
+        if (gzf:=paths[i]['forward_gz']).endswith('.gz'):
+            paths[i]['forward'] = f"results/raw_files/{i}/raw_R1.fastq"
+        else:
+            paths[i]['forward'] = gzf
+        if (gzr:=paths[i]['reversed_gz']).endswith('.gz'):
+            paths[i]['reversed'] = f"results/raw_files/{i}/raw_R2.fastq"
+        else:
+            paths[i]['reversed'] = gzr
+    return  paths
+
+
+sample_dict = get_reads(PATHS)
+
+include: "rules/binning.smk"
+include: "rules/bowtie2.smk"
+
+
+rule all:
+    input: 
+         expand("results/raw_read_quality/{sample}", sample=sample_dict.keys()) + expand("results/trimmed_filtered_read_quality/{sample}", sample=sample_dict.keys()) + expand("results/bowtie2/{sample}_sorted_filtered.bam", sample=sample_dict.keys()),
+         "results/sample_sizes.tsv"
+         
+
+rule stats_file:
+    input:
+        r1=[sample_dict[i]['forward_gz'] for i in sample_dict],
+        r2=[sample_dict[i]['reversed_gz'] for i in sample_dict],
+        bowtie_DB=config['inputs']['bowtie2_database_raw']
+    output:
+        "results/sample_sizes.tsv"
+    threads: 
+        workflow.cores
+    run:
+        stats_df = pd.DataFrame({
+            "r1_size": [os.stat(i).st_size for i in input.r1],
+            "r2_size": [os.stat(i).st_size for i in input.r2],
+            "sample": [i for i in sample_dict]})
+        stats_df["database_size"] = os.stat(input.bowtie_DB).st_size
+        stats_df["threads"] = threads
+        stats_df.to_csv(output[0], sep='\t')
+       
+
