@@ -11,13 +11,13 @@ rule unzip_inputfiles:
         r1=lambda w: sample_dict[w.sample]['forward_gz'],
         r2=lambda w: sample_dict[w.sample]['reversed_gz']
     output:
-       outdir=temp(directory("results/raw_files/{sample}")),
-       r1=temp("results/raw_files/{sample}/raw_R1.fastq"),
-       r2=temp("results/raw_files/{sample}/raw_R2.fastq")
+        outdir=directory("results/raw_files/{sample}"),
+        r1="results/raw_files/{sample}/raw_R1.fastq",
+        r2="results/raw_files/{sample}/raw_R2.fastq"
     # log:
     #     "logs/{sample}/unzip_inputfiles.log"
     resources:
-        mem_mb=lambda wildcards, input, attempt: (input.size//1000000) * attempt * 10,
+        mem=lambda wildcards, input, attempt: (input.size//1000000) * attempt * 10,
         time='1-00:00:00'
     run:
         shell("mkdir -p output.outdir")
@@ -35,10 +35,10 @@ rule fastqc_raw:
         r2=lambda w: sample_dict[w.sample]['reversed']
     output:
        folder = directory("results/raw_read_quality/{sample}"),
-       report_html=report("results/raw_read_quality/{sample}/raw_R1_fastqc.html", category='Sample Quality'),
-       report_html=report("results/raw_read_quality/{sample}/raw_R3_fastqc.html", category='Sample Quality')
+       report_html_r1=report("results/raw_read_quality/{sample}/raw_R1_fastqc.html", category='Sample Quality'),
+       report_html_r2=report("results/raw_read_quality/{sample}/raw_R2_fastqc.html", category='Sample Quality')
     resources:
-        mem_mb=lambda wildcards, input, attempt: (input.size//1000000) * attempt * 10,
+        mem=2570,
         time='1-00:00:00'
     # log:
     #     "logs/{sample}/fastqc_raw.log"
@@ -59,7 +59,7 @@ rule bbduk_trim_reads:
     threads: 
         workflow.cores
     resources:
-        mem_mb=lambda wildcards, input, attempt: (input.size//1000000) * attempt * 10,
+        mem=lambda wildcards, input, attempt: (input.size//100000000) * attempt * 10,
         time='1-00:00:00'
     # log:
     #     "logs/{sample}/bbduk_trim_reads.log"
@@ -87,7 +87,7 @@ rule rqcfilter2_filter_reads:
        interleaved="results/filtered_trimed_reads/{sample}/trimmed_R1.anqrpht.fastq.gz"
     threads: workflow.cores
     resources:
-        mem_mb=lambda wildcards, input, attempt: (input.size//1000000) * attempt * 10,
+        mem=lambda wildcards, input, attempt: (input.size//10000000) * attempt * 10,
         time='1-00:00:00'
     # log:
     #     "logs/{sample}/rqcfilter2_filter_reads.log"
@@ -116,7 +116,7 @@ rule unzip_filtered_file:
     output: 
         temp("results/filtered_trimed_reads/{sample}/trimmed_R1.anqrpht_unziped.fastq")
     resources:
-        mem_mb=lambda wildcards, input, attempt: (input.size//1000000) * attempt * 10,
+        mem=lambda wildcards, input, attempt: (input.size//1000000) * attempt * 10,
         time='1-00:00:00'
     # log:
     #     "logs/{sample}/unzip_filtered_file.log"
@@ -132,7 +132,7 @@ rule deinterleave_fastq:
        r1=temp("results/filtered_trimed_reads_deinterleave/{sample}/R1.fastq"),
        r2=temp("results/filtered_trimed_reads_deinterleave/{sample}/R2.fastq")
     resources:
-        mem_mb=lambda wildcards, input, attempt: (input.size//1000000) * attempt * 10,
+        mem=lambda wildcards, input, attempt: (input.size//1000000) * attempt * 10,
         time='1-00:00:00'
     # log:
     #     "logs/{sample}/deinterleave_fastq.log"
@@ -146,14 +146,14 @@ rule deinterleave_fastq:
 
 rule fastqc_trimm_filter:
     input:
-       r1=temp("results/filtered_trimed_reads_deinterleave/{sample}/R1.fastq"),
-       r2=temp("results/filtered_trimed_reads_deinterleave/{sample}/R2.fastq")
+       r1="results/filtered_trimed_reads_deinterleave/{sample}/R1.fastq",
+       r2="results/filtered_trimed_reads_deinterleave/{sample}/R2.fastq"
     output:
        directory("results/trimmed_filtered_read_quality/{sample}"),
-       report_html=report("results/trimmed_filtered_read_quality/{sample}/raw_R1_fastqc.html", category='Sample Quality'),
-       report_html=report("results/trimmed_filtered_read_quality/{sample}/raw_R2_fastqc.html", category='Sample Quality')
+       report_html_r1=report("results/trimmed_filtered_read_quality/{sample}/R1_fastqc.html", category='Sample Quality'),
+       report_html_r2=report("results/trimmed_filtered_read_quality/{sample}/R2_fastqc.html", category='Sample Quality')
     resources:
-        mem_mb=lambda wildcards, input, attempt: (input.size//1000000) * attempt * 10,
+        mem=lambda wildcards, input, attempt: (input.size//1000000) * attempt * 10,
         time='1-00:00:00'
     # log:
     #     "logs/{sample}/fastqc_trimm_filter.log"
