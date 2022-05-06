@@ -87,8 +87,8 @@ rule rqcfilter2_filter_reads:
        interleaved="results/filtered_trimed_reads/{sample}/trimmed_R1.anqrpht.fastq.gz"
     threads: workflow.cores
     resources:
-        mem=lambda wildcards, input, attempt: (input.size//10000000) * attempt * 10,
-        time='1-00:00:00'
+        mem=100000, #lambda wildcards, input, attempt: (input.size//1000000000) * attempt * 10,
+        time='14-00:00:00'
     # log:
     #     "logs/{sample}/rqcfilter2_filter_reads.log"
     benchmark:
