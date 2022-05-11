@@ -47,55 +47,55 @@ rule bowtie2_map:
        """
 
 
-rule samtools_sam_to_bam:
-    input:
-       sam_file="results/bowtie2/{sample}.sam"
-    output:
-       bam_file=temp("results/bowtie2/{sample}.bam")
-    threads: workflow.cores
-    # log:
-    #     "logs/{sample}/samtools_sam_to_bam.log"
-    benchmark:
-        "benchmarks/samtools_sam_to_bam/{sample}.tsv"
-    shell:
-       """
-      samtools view -bS -@ {threads} {input} > {output}
-       """
+# rule samtools_sam_to_bam:
+#     input:
+#        sam_file="results/bowtie2/{sample}.sam"
+#     output:
+#        bam_file=temp("results/bowtie2/{sample}.bam")
+#     threads: workflow.cores
+#     # log:
+#     #     "logs/{sample}/samtools_sam_to_bam.log"
+#     benchmark:
+#         "benchmarks/samtools_sam_to_bam/{sample}.tsv"
+#     shell:
+#        """
+#       samtools view -bS -@ {threads} {input} > {output}
+#        """
 
 
-rule reformat_bam:
-    input:
-       bam_in="results/bowtie2/{sample}.bam"
-    output:
-       bam_out=temp("results/bowtie2/{sample}_filtered.bam")
-    threads: workflow.cores
-    # log:
-    #     "logs/{sample}/reformat_bam.log"
-    benchmark:
-        "benchmarks/reformat_bam/{sample}.tsv"
-    shell:
-       """
-       reformat.sh \\
-           in={input.bam_in}\\
-           out={output.bam_out} \\
-           minidfilter=1 \\
-           primaryonly=t pairedonly=f
-       """
+# rule reformat_bam:
+#     input:
+#        bam_in="results/bowtie2/{sample}.bam"
+#     output:
+#        bam_out=temp("results/bowtie2/{sample}_filtered.bam")
+#     threads: workflow.cores
+#     # log:
+#     #     "logs/{sample}/reformat_bam.log"
+#     benchmark:
+#         "benchmarks/reformat_bam/{sample}.tsv"
+#     shell:
+#        """
+#        reformat.sh \\
+#            in={input.bam_in}\\
+#            out={output.bam_out} \\
+#            minidfilter=1 \\
+#            primaryonly=t pairedonly=f
+#        """
 
 
-rule samtools_bam_sort:
-    input:
-       bam_in="results/bowtie2/{sample}_filtered.bam"
-    output:
-       bam_out="results/bowtie2/{sample}_sorted_filtered.bam"
-    threads: workflow.cores
-    benchmark:
-        "benchmarks/samtools_bam_sort/{sample}.tsv"
-    # log:
-    #     "logs/{sample}/samtools_bam_sort.log"
-    shell:
-       """
-       samtools sort -n -@ {threads} -o {output} {input}
-       """
+# rule samtools_bam_sort:
+#     input:
+#        bam_in="results/bowtie2/{sample}_filtered.bam"
+#     output:
+#        bam_out="results/bowtie2/{sample}_sorted_filtered.bam"
+#     threads: workflow.cores
+#     benchmark:
+#         "benchmarks/samtools_bam_sort/{sample}.tsv"
+#     # log:
+#     #     "logs/{sample}/samtools_bam_sort.log"
+#     shell:
+#        """
+#        samtools sort -n -@ {threads} -o {output} {input}
+#        """
 
 

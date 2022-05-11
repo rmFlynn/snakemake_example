@@ -16,6 +16,9 @@ R2 = config['binning']['backward_id']
 PATHS = [i for p in config['inputs']['paired_reads'] for i in glob(p)]
 
 
+wildcard_constraints:
+    sample = '[^\./]'
+
 def ungz(path):
     if path.endswith('.gz'):
         return path.replace('.gz', '')
@@ -62,14 +65,11 @@ def get_reads(paths):
 
 sample_dict = get_reads(PATHS)
 
-include: "rules/binning.smk"
-include: "rules/bowtie2.smk"
-
 
 rule all:
     input: 
-         expand("results/raw_read_quality/{sample}", sample=sample_dict.keys()) + expand("results/trimmed_filtered_read_quality/{sample}", sample=sample_dict.keys()) + expand("results/bowtie2/{sample}_sorted_filtered.bam", sample=sample_dict.keys()),
-         "results/sample_sizes.tsv"
+         expand("results/raw_read_quality/{sample}", sample=sample_dict.keys()) + expand("results/trimmed_filtered_read_quality/{sample}", sample=sample_dict.keys()) + expand("results/{sample}.bam", sample=sample_dict.keys()),
+         "results/sample_sizes.tsv", "results/all_counts.tsv"
          
 
 rule stats_file:
@@ -90,4 +90,9 @@ rule stats_file:
         stats_df["threads"] = threads
         stats_df.to_csv(output[0], sep='\t')
        
+
+# Other rules
+include: "rules/binning.smk"
+include: "rules/bowtie2.smk"
+include: "rules/counting.smk"
 
