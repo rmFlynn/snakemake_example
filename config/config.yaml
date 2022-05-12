@@ -7,6 +7,10 @@ inputs:
     #- /home/projects-wrighton-2/projects-flynn/test_data/16_S3S*
     #- /home/ORG-Data-2/EMERGE/2016_27metaT/16_S3S*
     - /home/ORG-Data-2/EMERGE/2016_27metaT/3_E1D* 
+  named_reads:
+    any_name_you_want: 
+      forward: /home/ORG-Data-2/EMERGE/2016_27metaT/3_E1D_Daly_pool_1_S3_L001_R1_001.fastq.gz
+      reversed: /home/ORG-Data-2/EMERGE/2016_27metaT/3_E1D_Daly_pool_1_S3_L001_R2_001.fastq.gz
   # This is one database file should it be more?
   # You set both the input and output for the database, that bowtie2 will use. These files may be used for many
   # analisies so the output file can be in a central location so it dose not need to be remade. 
@@ -26,5 +30,6 @@ counting:
   idattr: 'ID' # For workflow/scripts/flexcount.py: GTF attribute to be used as feature ID (default, suitable for Ensembl GTF files: gene_id). 
 backend:
   report: "report/workflow.rst"
+  check_fasta_for_dups: True
 
 

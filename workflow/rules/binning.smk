@@ -1,6 +1,6 @@
-
-wildcard_constraints:
-    sample="[A-z,0-9,_,-]+"
+import gzip
+import shutil
+from workflow.scripts.singel_thread_test import fastas_dup_check
 
 def tempfunk2(w):
     print(w.sample)
@@ -29,10 +29,30 @@ rule unzip_inputfiles:
                 shutil.copyfileobj(f_in, f_out)
  
 
+rule check_dups_fasta:
+    input:
+        expand("results/raw_files/{sample}/raw_{read}.fastq", sample=sample_dict.keys(), read=['R1', 'R2'])
+    output:
+        "results/duplicate_names_note.txt"
+    resources:
+        mem=1000,
+        time='1-00:00:00'
+    benchmark:
+        "benchmarks/duplicate/check"
+    run:
+        if not config['backend']['check_fasta_for_dups']:
+            msg='Duplicate test waved'
+        else:
+            if fastas_dup_check(input, '@'):
+                msg='There are no duplicates'
+        with open(output, 'w') as f:
+            f.write(msg)
+
 rule fastqc_raw:
     input:
         r1=lambda w: sample_dict[w.sample]['forward'],
-        r2=lambda w: sample_dict[w.sample]['reversed']
+        r2=lambda w: sample_dict[w.sample]['reversed'],
+        no_dups="results/duplicate_names_note.txt"
     output:
        folder = directory("results/raw_read_quality/{sample}"),
        report_html_r1=report("results/raw_read_quality/{sample}/raw_R1_fastqc.html", category='Sample Quality'),
