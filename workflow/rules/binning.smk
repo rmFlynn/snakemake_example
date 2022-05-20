@@ -6,12 +6,18 @@ def tempfunk2(w):
     print(w.sample)
     return 
 
+rule make_temp_for_unzip_input_files:
+    output:
+        outdir=temp(directory("results/raw_files/{sample}")),
+    shell:
+        mkdir -p output.outdir
+
 rule unzip_inputfiles:
     input:
+        folder='results/raw_files/{sample}',
         r1=lambda w: sample_dict[w.sample]['forward_gz'],
         r2=lambda w: sample_dict[w.sample]['reversed_gz']
     output:
-        outdir=directory("results/raw_files/{sample}"),
         r1="results/raw_files/{sample}/raw_R1.fastq",
         r2="results/raw_files/{sample}/raw_R2.fastq"
     # log:
@@ -20,7 +26,6 @@ rule unzip_inputfiles:
         mem=lambda wildcards, input, attempt: (input.size//1000000) * attempt * 10,
         time='1-00:00:00'
     run:
-        shell("mkdir -p output.outdir")
         with gzip.open(input.r1, 'rb') as f_in:
             with open(output.r1, 'wb') as f_out:
                 shutil.copyfileobj(f_in, f_out)
@@ -31,7 +36,8 @@ rule unzip_inputfiles:
 
 rule check_dups_fasta:
     input:
-        expand("results/raw_files/{sample}/raw_{read}.fastq", sample=sample_dict.keys(), read=['R1', 'R2'])
+        folder='results/raw_files/{sample}',
+        reads=expand("results/raw_files/{sample}/raw_{read}.fastq", sample=sample_dict.keys(), read=['R1', 'R2'])
     output:
         "results/duplicate_names_note.txt"
     resources:
@@ -43,13 +49,14 @@ rule check_dups_fasta:
         if not config['backend']['check_fasta_for_dups']:
             msg='Duplicate test waved'
         else:
-            if fastas_dup_check(input, '@'):
+            if fastas_dup_check(input.reads, '@'):
                 msg='There are no duplicates'
         with open(output, 'w') as f:
             f.write(msg)
 
 rule fastqc_raw:
     input:
+        folder='results/raw_files/{sample}',
         r1=lambda w: sample_dict[w.sample]['forward'],
         r2=lambda w: sample_dict[w.sample]['reversed'],
         no_dups="results/duplicate_names_note.txt"
