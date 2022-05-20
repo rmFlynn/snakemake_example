@@ -4,29 +4,35 @@
 # in particular regarding the standardized folder structure mentioned there. 
 
 from workflow.scripts.setup_tools import get_sample_dict
+import pandas as pd # used in stats file
 
 
 configfile: "config/config.yaml"
 
 
 
+SAMPLE_DICT = get_sample_dict(config)
+
 wildcard_constraints:
-    sample = '[^\./]'
+    sample = '|'.join(SAMPLE_DICT.keys())
 
 
-SAMPLE_DICT = get_sample_dict()
 
 
 rule all:
     input: 
-         expand("results/raw_read_quality/{sample}", sample=sample_dict.keys()) + expand("results/trimmed_filtered_read_quality/{sample}", sample=sample_dict.keys()) + expand("results/{sample}.bam", sample=sample_dict.keys()),
-         "results/sample_sizes.tsv", "results/all_counts.tsv"
+         expand("results/raw_read_quality/{sample}", sample=SAMPLE_DICT.keys() if config['outputs']['get_quality'] else []),
+         expand("results/trimmed_filtered_read_quality/{sample}", sample=SAMPLE_DICT.keys() if config['outputs']['get_quality'] else [] ),
+         expand("results/{sample}.bam", sample=SAMPLE_DICT.keys() if config['outputs']['get_bams'] else []),
+         expand("results/sample_sizes.tsv", proxy=[None] if config['outputs']['get_stats'] else []),
+         expand("results/all_counts.tsv", proxy=[None] if config['outputs']['get_counts'] else [])
+         
          
 
 rule stats_file:
     input:
-        r1=[sample_dict[i]['forward_gz'] for i in sample_dict],
-        r2=[sample_dict[i]['reversed_gz'] for i in sample_dict],
+        r1=[SAMPLE_DICT[i]['forward_gz'] for i in SAMPLE_DICT],
+        r2=[SAMPLE_DICT[i]['reversed_gz'] for i in SAMPLE_DICT],
         bowtie_DB=config['inputs']['bowtie2_database_raw']
     output:
         "results/sample_sizes.tsv"
@@ -36,7 +42,7 @@ rule stats_file:
         stats_df = pd.DataFrame({
             "r1_size": [os.stat(i).st_size for i in input.r1],
             "r2_size": [os.stat(i).st_size for i in input.r2],
-            "sample": [i for i in sample_dict]})
+            "sample": [i for i in SAMPLE_DICT]})
         stats_df["database_size"] = os.stat(input.bowtie_DB).st_size
         stats_df["threads"] = threads
         stats_df.to_csv(output[0], sep='\t')

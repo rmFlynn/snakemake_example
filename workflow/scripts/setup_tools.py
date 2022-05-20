@@ -9,7 +9,7 @@ def ungz(path):
 
 
 def clean(string, r1:str, r2:str):
-    removable = [r1, r2, '.fastq', '.gz']
+    removable = [r1, r2, '.fastq', '.gz', '.fq']
     for i in removable:
          string = string.replace(i, '')
     return string

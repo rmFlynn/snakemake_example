@@ -15,8 +15,8 @@ rule make_temp_for_unzip_input_files:
 rule unzip_inputfiles:
     input:
         folder='results/raw_files/{sample}',
-        r1=lambda w: sample_dict[w.sample]['forward_gz'],
-        r2=lambda w: sample_dict[w.sample]['reversed_gz']
+        r1=lambda w: SAMPLE_DICT[w.sample]['forward_gz'],
+        r2=lambda w: SAMPLE_DICT[w.sample]['reversed_gz']
     output:
         r1="results/raw_files/{sample}/raw_R1.fastq",
         r2="results/raw_files/{sample}/raw_R2.fastq"
@@ -37,7 +37,7 @@ rule unzip_inputfiles:
 rule check_dups_fasta:
     input:
         folder='results/raw_files/{sample}',
-        reads=expand("results/raw_files/{sample}/raw_{read}.fastq", sample=sample_dict.keys(), read=['R1', 'R2'])
+        reads=expand("results/raw_files/{sample}/raw_{read}.fastq", sample=SAMPLE_DICT.keys(), read=['R1', 'R2'])
     output:
         "results/duplicate_names_note.txt"
     resources:
@@ -57,8 +57,8 @@ rule check_dups_fasta:
 rule fastqc_raw:
     input:
         folder='results/raw_files/{sample}',
-        r1=lambda w: sample_dict[w.sample]['forward'],
-        r2=lambda w: sample_dict[w.sample]['reversed'],
+        r1=lambda w: SAMPLE_DICT[w.sample]['forward'],
+        r2=lambda w: SAMPLE_DICT[w.sample]['reversed'],
         no_dups="results/duplicate_names_note.txt"
     output:
        folder = directory("results/raw_read_quality/{sample}"),
@@ -79,8 +79,8 @@ rule fastqc_raw:
 
 rule bbduk_trim_reads:
     input:
-        r1=lambda w: sample_dict[w.sample]['forward'],
-        r2=lambda w: sample_dict[w.sample]['reversed']
+        r1=lambda w: SAMPLE_DICT[w.sample]['forward'],
+        r2=lambda w: SAMPLE_DICT[w.sample]['reversed']
     output:
        spath=temp(directory("results/trimmed_reads/{sample}"))
     threads: 
