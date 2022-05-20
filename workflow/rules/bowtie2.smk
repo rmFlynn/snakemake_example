@@ -46,6 +46,20 @@ rule bowtie2_map:
            -2 {input.r2}
        """
 
+rule samtools_sam_to_bam:
+    input:
+       "results/counting/{sample}.final.sam",
+    output:
+       "results/{sample}.bam"
+    threads: workflow.cores
+    # log:
+    #     "logs/{sample}/samtools_sam_to_bam.log"
+    benchmark:
+        "benchmarks/samtools_sam_to_bam/{sample}.tsv"
+    shell:
+       """
+      samtools view -bS -@ {threads} {input} > {output}
+       """
 
 # rule samtools_sam_to_bam:
 #     input:

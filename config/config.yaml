@@ -2,15 +2,13 @@
 inputs:
   # This can be a set of wild cards, or a list
   paired_reads:
-    # - resources/tini*
-    #- test_data/vari_size_inputs/*fastq.gz
-    #- /home/projects-wrighton-2/projects-flynn/test_data/16_S3S*
-    #- /home/ORG-Data-2/EMERGE/2016_27metaT/16_S3S*
-    - /home/ORG-Data-2/EMERGE/2016_27metaT/3_E1D* 
+    - '/home/projects-wrighton/EMERGE/EMERGE_metaTs/2016/concat_reads/E1D_2016_cat_*.fq.gz'
+    - '/home/projects-wrighton/EMERGE/EMERGE_metaTs/2016/concat_reads/P2M_2016_cat*.fq.gz'
+    - '/home/projects-wrighton/EMERGE/EMERGE_metaTs/2016/concat_reads/S1S_2016_cat_*.fq.gz'
   named_reads:
-    any_name_you_want: 
-      forward: /home/ORG-Data-2/EMERGE/2016_27metaT/3_E1D_Daly_pool_1_S3_L001_R1_001.fastq.gz
-      reversed: /home/ORG-Data-2/EMERGE/2016_27metaT/3_E1D_Daly_pool_1_S3_L001_R2_001.fastq.gz
+  #   any_name_you_want: 
+  #     forward: /home/ORG-Data-2/EMERGE/2016_27metaT/3_E1D_Daly_pool_1_S3_L001_R1_001.fastq.gz
+  #     reversed: /home/ORG-Data-2/EMERGE/2016_27metaT/3_E1D_Daly_pool_1_S3_L001_R2_001.fastq.gz
   # This is one database file should it be more?
   # You set both the input and output for the database, that bowtie2 will use. These files may be used for many
   # analisies so the output file can be in a central location so it dose not need to be remade. 
@@ -21,8 +19,10 @@ inputs:
   gff: /home/projects-wrighton/EMERGE/EMERGE_metaTs/2016/concat_mapping/drep_genes_combined.gff
 # You will probably not use this part 75% of the time.
 outputs:
-  get_quality: True
+  get_quality: False
   get_counts: True
+  get_stats: False
+  get_bams: True 
 binning:
   forward_id: '_R1'
   backward_id: '_R2'
