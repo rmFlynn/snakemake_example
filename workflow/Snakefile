@@ -17,16 +17,13 @@ wildcard_constraints:
     sample = '|'.join(SAMPLE_DICT.keys())
 
 
-
-
 rule all:
     input: 
-         expand("results/raw_read_quality/{sample}", sample=SAMPLE_DICT.keys() if config['outputs']['get_quality'] else []),
-         expand("results/trimmed_filtered_read_quality/{sample}", sample=SAMPLE_DICT.keys() if config['outputs']['get_quality'] else [] ),
+         expand("results/read_quality/{sample}_raw", sample=SAMPLE_DICT.keys() if config['outputs']['get_quality'] else []),
+         expand("results/read_quality/{sample}_trimmed_filtered", sample=SAMPLE_DICT.keys() if config['outputs']['get_quality'] else [] ),
          expand("results/{sample}.bam", sample=SAMPLE_DICT.keys() if config['outputs']['get_bams'] else []),
          expand("results/sample_sizes.tsv", proxy=[None] if config['outputs']['get_stats'] else []),
          expand("results/all_counts.tsv", proxy=[None] if config['outputs']['get_counts'] else [])
-         
          
 
 rule stats_file:

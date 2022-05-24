@@ -65,7 +65,7 @@ rule counting:
        sam="results/counting/{sample}.final.sam",
        gff=config['inputs']['gff']
     output:
-        'results/counting/{sample}.counts.tsv'
+        temp('results/counting/{sample}.counts.tsv')
     threads: workflow.cores
     params:
        percent_read=config['counting']['percent_read'],
