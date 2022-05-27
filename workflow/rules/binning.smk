@@ -83,7 +83,7 @@ rule bbduk_trim_reads:
         r1=lambda w: SAMPLE_DICT[w.sample]['forward'],
         r2=lambda w: SAMPLE_DICT[w.sample]['reversed']
     output:
-       spath=temp(directory("results/trimmed_reads/{sample}"))
+       spath=temp(directory("results/trimmed_reads_bbduk/{sample}"))
     threads: 
         workflow.cores
     resources:
@@ -106,9 +106,35 @@ rule bbduk_trim_reads:
        """
 
 
+rule sickel_trimreads:
+    input:
+        r1=lambda w: SAMPLE_DICT[w.sample]['forward'],
+        r2=lambda w: SAMPLE_DICT[w.sample]['reversed']
+    output:
+       file_path_rna=temp(directory("results/binning/{sample}_sickel")),
+    threads: 
+        workflow.cores
+    resources:
+        mem=lambda wildcards, input, attempt: (input.size//100000000) * attempt * 10,
+        time='1-00:00:00'
+    benchmark:
+        "benchmarks/bbduk_trim_reads/{sample}_bin.tsv"
+    shell:
+       """
+       bbduk.sh threads={threads} \\
+           overwrite=t \\
+           in1={input.r1} \\
+           in2={input.r2} \\
+           ktrim=r k=23 mink=11 hdist=1 qtrim=rl trimq=20 minlength=75 \\
+           ref=/opt/bbtools/bbmap/resources/adapters.fa  \\
+           out1={output.spath}/trimmed_R1.fastq \\
+           out2={output.spath}/trimmed_R2.fastq
+       """
+
+
 rule rqcfilter2_filter_reads:
     input:
-       "results/trimmed_reads/{sample}"
+       "results/trimmed_reads_bbduk/{sample}"
     output:
        file_path=temp(directory("results/filtered_trimed_reads/{sample}")),
        file_path_rna=temp("results/filtered_trimed_reads/{sample}/RNA.fq.gz"),
@@ -117,8 +143,6 @@ rule rqcfilter2_filter_reads:
     resources:
         mem=100000, #lambda wildcards, input, attempt: (input.size//1000000000) * attempt * 10,
         time='14-00:00:00'
-    # log:
-    #     "logs/{sample}/rqcfilter2_filter_reads.log"
     benchmark:
         "benchmarks/rqcfilter2_filter_reads/{sample}.tsv"
     shell:
@@ -161,8 +185,8 @@ rule deinterleave_fastq:
        file_path="results/filtered_trimed_reads/{sample}",
        file="results/filtered_trimed_reads/{sample}/trimmed_R1.anqrpht_unziped.fastq"
     output:
-       r1=temp("results/{sample}_bined_R1.fastq"),
-       r2=temp("results/{sample}_bined_R2.fastq")
+       r1=temp("results/{sample}_bined_metaT_R1.fastq"),
+       r2=temp("results/{sample}_bined_metaT_R2.fastq")
     resources:
         mem=lambda wildcards, input, attempt: (input.size//1000000) * attempt * 10,
         time='1-00:00:00'

@@ -1,8 +1,11 @@
 # You will want to fill this out for each run, it should be fine to clone this repo for each run.
+type: meta_g # type can be meta_t or meta_g
 inputs:
   # This can be a set of wild cards, or a list
+  named_paired_read_dirs:
+    jpl: '/home/projects-wrighton-2/Jason_lloyd_price/JLP_metag_reads/*'
   paired_reads:
-    - '/home/projects-wrighton-2/projects-flynn/test_data/vari_size_inputs/cut_101*.fastq*'
+      # - '/home/projects-wrighton-2/Jason_lloyd_price/JLP_metag_reads/*'
       #- '/home/projects-wrighton-2/projects-flynn/test_data/vari_size_inputs/*'
   named_reads:
   #   any_name_you_want: 
@@ -13,18 +16,23 @@ inputs:
   # analisies so the output file can be in a central location so it dose not need to be remade. 
   bowtie2_database_raw: /home/projects-wrighton/EMERGE/EMERGE_metaTs/2016/concat_mapping/97dRep_scaffolds_combined.fa 
   bowtie2_database_built: resources/bowtie2_databases/full_db
-    # bowtie2_database_raw:  test_data/vari_size_inputs/database_3412_size.fa
-    # bowtie2_database_built: resources/bowtie2_databases/database_3412_cores_10
+  bowtie2_database_raw: /home/projects-wrighton/EMERGE/EMERGE_metaTs/2016/concat_mapping/97dRep_scaffolds_combined.fa 
+  bowtie2_database_built: resources/bowtie2_databases/full_db
+  # bowtie2_database_raw:  test_data/vari_size_inputs/database_3412_size.fa
+  # bowtie2_database_built: resources/bowtie2_databases/database_3412_cores_10
   gff: /home/projects-wrighton/EMERGE/EMERGE_metaTs/2016/concat_mapping/drep_genes_combined.gff
 # You will probably not use this part 75% of the time.
 outputs:
-  get_quality: True
+  get_quality: false
   get_counts: True
   get_stats: True 
   get_bams: True 
 binning:
-  forward_id: '_R1'
-  backward_id: '_R2'
+  forward_id: '_1'
+  backward_id: '_2'
+coverm:
+  min_read_percent_identity_pair: 0.95,
+  min_covered_fraction: 0.75
 counting:
   percent_read: 95 # For Rich sam_file.py: percent of (read_length - mismatches)/read_length to keep EX: 90
   max_mismatch: 3 # For Rich sam_file.py: max number of mismatches
