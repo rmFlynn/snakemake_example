@@ -3,7 +3,7 @@
 # https://snakemake.readthedocs.io/en/stable/snakefiles/best_practices.html,
 # in particular regarding the standardized folder structure mentioned there. 
 
-from workflow.scripts.setup_tools import get_sample_dict
+from workflow.utils.setup_tools import get_sample_dict
 import pandas as pd # used in stats file
 
 
