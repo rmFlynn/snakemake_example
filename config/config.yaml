@@ -2,12 +2,12 @@
 inputs:
   # This can be a set of wild cards, or a list
   paired_reads:
-    - '/home/projects-wrighton-2/projects-flynn/test_data/vari_size_inputs/cut_101*.fastq*'
-      #- '/home/projects-wrighton-2/projects-flynn/test_data/vari_size_inputs/*'
+    #- '/path/one/name1*.fastq*'
+    #- '/path/two/name2*.fastq*'
   named_reads:
   #   any_name_you_want: 
-  #     forward: /home/ORG-Data-2/EMERGE/2016_27metaT/3_E1D_Daly_pool_1_S3_L001_R1_001.fastq.gz
-  #     reversed: /home/ORG-Data-2/EMERGE/2016_27metaT/3_E1D_Daly_pool_1_S3_L001_R2_001.fastq.gz
+  #     forward: something_R1.fastq.gz
+  #     reversed: something_R2.fastq.gz 
   # This is one database file should it be more?
   # You set both the input and output for the database, that bowtie2 will use. These files may be used for many
   # analisies so the output file can be in a central location so it dose not need to be remade. 
