@@ -26,8 +26,8 @@ rule bowtie2_build_database:
 rule bowtie2_map:
     input:
        bowtie_database=config['inputs']['bowtie2_database_built'],
-       r1="results/filtered_trimed_reads_deinterleave/{sample}/R1.fastq",
-       r2="results/filtered_trimed_reads_deinterleave/{sample}/R2.fastq"
+       r1="results/{sample}_bined_R1.fastq",
+       r2="results/{sample}_bined_R2.fastq"
     output:
        sam_file=temp("results/bowtie2/{sample}.sam")
     threads: workflow.cores
@@ -46,6 +46,20 @@ rule bowtie2_map:
            -2 {input.r2}
        """
 
+rule samtools_sam_to_bam:
+    input:
+       "results/counting/{sample}.final.sam",
+    output:
+       "results/{sample}.bam"
+    threads: workflow.cores
+    # log:
+    #     "logs/{sample}/samtools_sam_to_bam.log"
+    benchmark:
+        "benchmarks/samtools_sam_to_bam/{sample}.tsv"
+    shell:
+       """
+      samtools view -bS -@ {threads} {input} > {output}
+       """
 
 # rule samtools_sam_to_bam:
 #     input:

@@ -1,5 +1,5 @@
 
-ruleorder: reformat_sam > samtools_sam_sort > rich_script_sam_file > counting > join_counting > samtools_sam_to_bam
+# ruleorder: reformat_sam > samtools_sam_sort > rich_script_sam_file > counting > join_counting > samtools_sam_to_bam
 
 
 rule reformat_sam:
@@ -42,7 +42,7 @@ rule rich_script_sam_file:
     input:
        sam_in="results/counting/{sample}.sorted.reformatted.sam"
     output:
-       sam_out=temp("results/counting/{sample}.sorted.reformatted.filtered.sam")
+       sam_out=temp("results/counting/{sample}.final.sam")
     threads: workflow.cores
     params:
        percent_read=config['counting']['percent_read'],
@@ -60,10 +60,9 @@ rule rich_script_sam_file:
                        --mult_align {params.mult_align}
        """
 
-
 rule counting:
     input:
-       sam="results/counting/{sample}.sorted.reformatted.filtered.sam",
+       sam="results/counting/{sample}.final.sam",
        gff=config['inputs']['gff']
     output:
         temp('results/counting/{sample}.counts.tsv')
@@ -91,7 +90,7 @@ rule counting:
 
 rule join_counting:
     input:
-       expand("results/counting/{sample}.counts.tsv", sample=sample_dict.keys())
+       expand("results/counting/{sample}.counts.tsv", sample=SAMPLE_DICT.keys())
     output:
       "results/all_counts.tsv"
     threads: 
@@ -104,17 +103,3 @@ rule join_counting:
             shell(f"sed 1,1d {i} >> {{output}}")
 
 
-rule samtools_sam_to_bam:
-    input:
-       "results/counting/{sample}.sorted.reformatted.filtered.sam",
-    output:
-       temp("results/{sample}.bam")
-    threads: workflow.cores
-    # log:
-    #     "logs/{sample}/samtools_sam_to_bam.log"
-    benchmark:
-        "benchmarks/samtools_sam_to_bam/{sample}.tsv"
-    shell:
-       """
-      samtools view -bS -@ {threads} {input} > {output}
-       """
