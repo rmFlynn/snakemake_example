@@ -10,7 +10,6 @@ import os.path
 import multiprocessing
 import pysam
 import random
-
 import HTSeq
 
 class UnknownChrom(Exception):
