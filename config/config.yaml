@@ -29,6 +29,7 @@ counting:
   percent_read: 95 # For Rich sam_file.py: percent of (read_length - mismatches)/read_length to keep EX: 90
   max_mismatch: 3 # For Rich sam_file.py: max number of mismatches
   featuretype: 'CDS' # For workflow/scripts/flexcount.py: Feature type (3rd column in GTF file) to be used, all features of other type are ignored
+  stranded: 'reverse'
   idattr: 'ID' # For workflow/scripts/flexcount.py: GTF attribute to be used as feature ID (default, suitable for Ensembl GTF files: gene_id). 
 backend:
   report: "report/workflow.rst"

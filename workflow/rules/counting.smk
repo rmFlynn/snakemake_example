@@ -71,7 +71,7 @@ rule counting:
        percent_read=config['counting']['percent_read'],
        featuretype=config['counting']['featuretype'],
        idattr=config['counting']['idattr'],
-       stranded='reverse',
+       stranded=config['counting']['stranded'],
        nonunique='Rory'
     benchmark:
         "benchmarks/counting/{sample}.tsv"
