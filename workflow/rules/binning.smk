@@ -125,7 +125,8 @@ rule sickle_trimreads:
     output:
         file_path_rna=temp(directory("results/binning/{sample}_sickel")),
         r1="results/binning/{sample}_sickel/trimmed_R1.fastq",
-        r2="results/binning/{sample}_sickel/trimmed_R2.fastq"    
+        r2="results/binning/{sample}_sickel/trimmed_R2.fastq",
+        singles = "results/binning/{sample}_sickel/trimmed_singles.fastq"
     threads: 
         1
     resources:
@@ -140,9 +141,10 @@ rule sickle_trimreads:
        sickle pe \\
            -f {input.r1} \\
            -r {input.r2} \\
-           -t {params.sickle_quality_type}
+           -t {params.sickle_quality_type} \\
            -o {output.r1} \\
            -p {output.r2} \\
+           -s {output.singles}
        """
 
 
