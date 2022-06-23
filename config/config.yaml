@@ -4,7 +4,7 @@ inputs:
   interleaved_reads:
   paired_reads:
       # - '/home/projects-wrighton-2/Jason_lloyd_price/JLP_metag_reads/*'
-      #- '/home/projects-wrighton-2/projects-flynn/test_data/vari_size_inputs/*'
+   ghp_ikzbQBkRdgpdvWcqEuxcqv1iWdkvaG2V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G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KwA   #- '/home/projects-wrighton-2/projects-flynn/test_data/vari_size_inputs/*'
   named_reads:
   # Here you can put nothing, or asmany reads as you want with the format: 
   #   any_name_you_want: 
@@ -46,7 +46,7 @@ outputs:
 binning:
   forward_id: '_1'
   backward_id: '_2'
-  sickle_quality_type: 'illumina' 
+  sickle_quality_type: 'sanger' # options inclued 'sanger' and 'illumina' 
 coverm:
   min_read_percent_identity_pair: 0.95,
   min_covered_fraction: 0.75
