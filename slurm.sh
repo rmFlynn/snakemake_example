@@ -11,7 +11,7 @@
 
 source /opt/Miniconda2/miniconda2/bin/activate scripts
 
-cd /home/projects-wrighton-2/projects-flynn/may_24_22_meta_g_pipline/RMNP_pipline
+cd /home/projects-wrighton-2/projects-flynn/rmnp_pipeline/test_runs_of_pipline/jun_23_metat_check/RMNP_pipline
 
-snakemake --profile slurm -j 4 -c 20 --dag | dot -Tpdf > dag.pdf
-snakemake --profile slurm -j 4 -c 30 --rerun-incomplete
+rm 
+snakemake --profile slurm -j 5 -c 20 --rerun-incomplete --keep-incomplete --notemp 

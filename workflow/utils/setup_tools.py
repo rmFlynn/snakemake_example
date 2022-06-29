@@ -19,7 +19,7 @@ def find_match(name, files, r1:str, r2:str):
     for i in files:
         if clean(i, r1, r2) == name:
             return i
-   
+
 
 def get_reads(paths:list, r1:str, r2:str):
     # Check for dupes in fastas
@@ -52,10 +52,7 @@ def get_reads(paths:list, r1:str, r2:str):
 
 def get_inter_reads(paths:list):
     # Check for dupes in fastas
-
-    names = [clean(i, "", "") for i in freads]
-    paths = { os.path.basename(i):{'inter_gz': freads}
-             for i in names}
+    paths = { os.path.basename(clean(i, "", "")):{'inter_gz': i} for i in paths}
     for i in paths:
         if (gzf:=paths[i]['inter_gz']).endswith('.gz'):
             paths[i]['inter'] = f"results/raw_files/{i}/raw_inter.fastq"
@@ -92,6 +89,8 @@ def get_named_reads(named_paths):
         else:
             out['inter_gz'] = None
             out['inter'] = inter
+        out['R2'] = f"results/raw_files/{k}/raw_R2.fastq"
+        out['R1'] = f"results/raw_files/{k}/raw_R1.fastq"
         return out
     return {k: make_paths(k, v) for k, v in named_paths.items()}
 
@@ -102,10 +101,11 @@ def get_sample_dict(config:dict):
     sample_dict = {}
     if (inter_reads := config['inputs'].get('interleaved_reads')) is not None:
         paths = [i for p in inter_reads for i in glob(p)]
-        sample_dict.update(get_inter_reads(paths, r1, r2))
+        sample_dict.update(get_inter_reads(paths))
     if (paired_reads := config['inputs'].get('paired_reads')) is not None:
         paths = [i for p in paired_reads for i in glob(p)]
         sample_dict.update(get_reads(paths, r1, r2))
     if (named_paths := config['inputs'].get('named_reads')) is not None:
         sample_dict.update(get_named_reads(named_paths))
     return sample_dict
+

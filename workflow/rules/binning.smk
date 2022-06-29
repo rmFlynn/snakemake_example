@@ -16,7 +16,7 @@ rule unzip_inputfiles:
     output:
         read="results/raw_files/{sample}/raw_{type}.fastq",
     resources:
-        mem=lambda wildcards, input, attempt: (input.size//1000000) * attempt * 10,
+        mem=4000,
         time='1-00:00:00'
     run:
         shell("mkdir -p output.outdir")
@@ -32,12 +32,14 @@ rule deinterleave_fastq_inputfiles:
         outdir=temp(directory("results/raw_files/{sample}")),
         r1="results/raw_files/{sample}/raw_R1.fastq",
         r2="results/raw_files/{sample}/raw_R2.fastq"
+    benchmark:
+        "benchmarks/deinterleave_fastq_inputfiles/{sample}"
     resources:
-        mem=lambda wildcards, input, attempt: (input.size//1000000) * attempt * 10,
+        mem=4000,
         time='1-00:00:00'
     shell:
         """
-        mkdir -p output.outdir
+        mkdir -p {output.outdir}
         /ORG-Data/scripts/deinterleave_fastq.sh < {input.il} {output.r1} {output.r1}
         """
 
@@ -99,7 +101,7 @@ rule bbduk_trim_reads:
     threads: 
         workflow.cores
     resources:
-        mem=lambda wildcards, input, attempt: (input.size//100000000) * attempt * 10,
+        mem=lambda wildcards, input, attempt: (input.size//1000000000) * attempt * 10,
         time='1-00:00:00'
     # log:
     #     "logs/{sample}/bbduk_trim_reads.log"
@@ -130,7 +132,7 @@ rule sickle_trimreads:
     threads: 
         1
     resources:
-        mem=lambda wildcards, input, attempt: (input.size//100000000) * attempt * 10,
+        mem=lambda wildcards, input, attempt: (input.size//1000000000) * attempt * 10,
         time='1-00:00:00'
     benchmark:
         "benchmarks/sickle_trim_reads/{sample}_bin.tsv"
@@ -189,7 +191,7 @@ rule unzip_file:
     output: 
         temp("results/filtered_trimed_reads/{sample}/trimmed_R1.anqrpht_unziped.fastq"),
     resources:
-        mem=lambda wildcards, input, attempt: (input.size//1000000) * attempt * 10,
+        mem=4000,
         time='1-00:00:00'
     # log:
     #     "logs/{sample}/unzip_filtered_file.log"
