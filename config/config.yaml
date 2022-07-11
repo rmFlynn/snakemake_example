@@ -48,10 +48,12 @@ binning:
   backward_id: '_2'
   sickle_quality_type: 'sanger' # options inclued 'sanger' and 'illumina' 
 coverm:
-  min_read_percent_identity_pair: 0.95,
+  min_read_percent_identity_pair: 0.95
   min_covered_fraction: 0.75
   min_depth: 3
   genome_fasta_extension: 'fa'
+  sequence_lenth: 100
+  calculate_per_seq_length: False
 counting:
   percent_read: 95 # For Rich sam_file.py: percent of (read_length - mismatches)/read_length to keep EX: 90
   max_mismatch: 3 # For Rich sam_file.py: max number of mismatches

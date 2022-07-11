@@ -1,7 +1,8 @@
 import pandas as pd
 import click
+import subprocess
+from io import StringIO
 
-import os
 
 # os.system(
 # COUNT_OPTION_1 = """
@@ -29,20 +30,41 @@ import os
 # covered_fract_path = './data/JLP_covered_fraction.tsv'
 # coverm_trimed_path = './data/JLP_trimmed_mean.tsv'
 
-def combine_coverm(coverm_trimed, read_per_base, covered_fract_path, bam, 
-                   out_zero, out_filterd, min_depth, untrimmed_output=False):
-    breakpoint()
-    os.system("samtools view f{bam}",
-              " | awk '{print length($10)}' | head -1000 | sort -u > bin_lengths.tsv")
-    read_per_base = pd.read_csv(read_per_base_path, sep='\t', index_col='Genome').fillna(0)
-    covered_fract = pd.read_csv(covered_fract_path, sep='\t', index_col='Genome').fillna(0)
-    coverm_trimed = pd.read_csv(coverm_trimed_path, sep='\t', index_col='Genome').fillna(0)
+def get_bin_lengths(bam:str):
+    with subprocess.Popen(["samtools", "view", bam], stdout=subprocess.PIPE) as sam:
+        sam_lines = [i for i in sam.stdout]
+    split_lines = [str(i).split('\\t') for i in  sam_lines]
+    bad_lines = [i for i in  split_lines if len(i) < 10]
+    if len(bad_lines) > 0:
+        breakpoint()
+    lenths = [(i[9]) for i in split_lines]
+    names = [i[2] for i in split_lines]
+    data = pd.DataFrame({'length': lenths}, index=names)
+    return data
 
-    lengths = pd.read_csv("bin_lengths.txt", index_col=0, sep="\t")
-    lengths.index = lengths.index.str.replace('.fa', '', regex=False)
+def combine_coverm(coverm_trimed_path, read_per_base_path,
+                   covered_fract_path, bam, out_zero, out_filterd,
+                   min_depth, sequence_lenth, calculate_per_seq_length,
+                   untrimmed_output):
+    read_per_base = pd.read_csv(read_per_base_path, 
+                                sep='\t', index_col='Genome').fillna(0)
+    covered_fract = pd.read_csv(covered_fract_path, 
+                                sep='\t', index_col='Genome').fillna(0)
+    coverm_trimed = pd.read_csv(coverm_trimed_path, 
+                                sep='\t', index_col='Genome').fillna(0)
+
     read_per_base.T[read_per_base.apply(lambda x: x.isna().any(), axis=0)]
-    read_per_base = read_per_base.merge(lengths, left_index=True, right_index=True, how='right')
-    read_per_base = read_per_base.iloc[:,:-1].apply(lambda x : x * read_per_base['length'])
+    if isinstance(bam, str):
+        bam = [bam]
+    if calculate_per_seq_length:
+        # this should never hapen but if it dose it will be slow
+        lengths = get_bin_lengths(bam[0])
+        read_per_base = read_per_base.merge(lengths, left_index=True, 
+                                            right_index=True, how='right')
+        read_per_base = read_per_base.iloc[:,:-1].apply(
+            lambda x : x * read_per_base['length'])
+    else:
+        read_per_base = read_per_base * sequence_lenth
 
     coverm_trimed[covered_fract == 0] = 0
     coverm_trimed[read_per_base >= min_depth] = 0
@@ -58,4 +80,6 @@ combine_coverm(snakemake.input['mean'], snakemake.input['base'],
                 snakemake.output['zero'],
                 snakemake.output['filt'],
                 snakemake.params['min_depth'],
+                snakemake.params['sequence_lenth'],
+                snakemake.params['calculate_per_seq_length'],
                 untrimmed_output=True)
