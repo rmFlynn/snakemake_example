@@ -132,7 +132,7 @@ rule sickle_trimreads:
     threads: 
         1
     resources:
-        mem=lambda wildcards, input, attempt: (input.size//1000000000) * attempt * 10,
+        mem= 7,
         time='1-00:00:00'
     benchmark:
         "benchmarks/sickle_trim_reads/{sample}_bin.tsv"
@@ -161,12 +161,13 @@ rule rqcfilter2_filter_reads:
        interleaved=temp("results/filtered_trimed_reads/{sample}/trimmed_R1.anqrpht.fastq.gz")
     threads: workflow.cores
     resources:
-       mem=100000, #lambda wildcards, input, attempt: (input.size//1000000000) * attempt * 10,
+       mem=309062, # Needs tweekinglambda wildcards, input, attempt: (input.size//1000000000) * attempt * 10,
        time='14-00:00:00'
     benchmark:
         "benchmarks/rqcfilter2_filter_reads/{sample}.tsv"
     shell:
        """
+       mkdir -p {output.file_path}
        rqcfilter2.sh jni=t \\
            threads={threads} \\
            in1={input.in1} \\
@@ -208,7 +209,7 @@ rule deinterleave_fastq:
        r1=temp("results/{sample}_bined_R1.fastq"),
        r2=temp("results/{sample}_bined_R2.fastq")
     resources:
-        mem=lambda wildcards, input, attempt: (input.size//1000000) * attempt * 10,
+        mem=10, # This is invariant to the best I can tell
         time='1-00:00:00'
     # log:
     #     "logs/{sample}/deinterleave_fastq.log"
