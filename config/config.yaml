@@ -2,70 +2,28 @@
 type: 'meta_t' # type can be 'meta_t' or 'meta_g'
 inputs:
   interleaved_reads:
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/altamaha_2019_sw_WHONDRS-S19S_0010_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/arikareeriver_2019_sw_WHONDRS-S19S_0023_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/augustacreek_2019_sw_WHONDRS-S19S_0067_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/blackearthcreek_2019_sw_WHONDRS-S19S_0061_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/blackwarrior_2019_sw_WHONDRS-S19S_0021_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/blueriver_2019_sw_WHONDRS-S19S_0024_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/blythe_2019_sw_WHONDRS-S19S_0092_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/cachelapoudre_2019_sw_WHONDRS-S19S_0072_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/cariboucreek_2019_sw_WHONDRS-S19S_0051_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/cartcreek_2019_sw_WHONDRS-S19S_0073_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/cobbmillcreek_2019_sw_WHONDRS-S19S_0090_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/columbia_2019_sw_WHONDRS-S19S_0036_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/columbia_2019_sw_WHONDRS-S19S_0074_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/columbiariver2_2019_sw_WHONDRS-S19S_0076_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/comocreek_2019_sw_WHONDRS-S19S_0026_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/deadrun_2019_sw_WHONDRS-S19S_0006_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/dobsoncreek_2019_sw_WHONDRS-S19S_0087_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/eastforkpoplarcreek_2019_sw_WHONDRS-S19S_0039_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/farmington_2019_sw_WHONDRS-S19S_0053_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/fraser_2019_sw_WHONDRS-S19S_0001_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/greatmiami_2019_sw_WHONDRS-S19S_0099_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/guil_2019_sw_WHONDRS-S19S_0049_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/gunnisonriver_2019_sw_WHONDRS-S19S_0062_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/hugercreek_2019_sw_WHONDRS-S19S_0044_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/icacos_2019_sw_WHONDRS-S19S_0094_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/king_2019_sw_WHONDRS-S19S_0016_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/kingscreed_2019_sw_WHONDRS-S19S_0040_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/lajara_2019_sw_WHONDRS-S19S_0034_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/littlewindriver_2019_sw_WHONDRS-S19S_0009_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/littlewolfcreek_2019_sw_WHONDRS-S19S_0078_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/logan1_2019_sw_WHONDRS-S19S_0097_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/logan2_2019_sw_WHONDRS-S19S_0098_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/lowercolorado_2019_sw_WHONDRS-S19S_0063_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/marshallgulch_2019_sw_WHONDRS-S19S_0035_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/marthacreek_2019_sw_WHONDRS-S19S_0030_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/mcdi_2019_sw_WHONDRS-S19S_0017_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/middleoconee_2019_sw_WHONDRS-S19S_0011_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/morescreek_2019_sw_WHONDRS-S19S_0085_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/muddycreek_2019_sw_WHONDRS-S19S_0082_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/nakdong_2019_sw_WHONDRS-S19S_0056_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/nebranchanacostia_2019_sw_WHONDRS-S19S_0081_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/oksrukuyikcreek_2019_sw_WHONDRS-S19S_0050_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/orco_2019_sw_WHONDRS-S19S_0096_MT_trimmed.anqrpht.fastq
-     - /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/pamunkeyriver_2019_sw_WHONDRS-S19S_0054_MT_trimmed.anqrpht.fastq
+     - read1.fastq
+     - read2.fastq
+     # alternately
+     - folder/path/*.fastq
   paired_reads:
     #- '/path/one/name1*.fastq*'
     #- '/path/two/name2*.fastq*'
   named_reads:
   # Here you can put nothing, or asmany reads as you want with the format: 
-  #   any_name_you_want: 
-  #     R1: something_R1.fastq.gz
-  #     R2: something_R2.fastq.gz 
-  #     # Alternately
-  #     inter: something_interleaved.fastq.gz
-    pamunkeyriver_2019_sw_WHONDRS-S19S_0054_MT_trimmed.anqrpht:
-      inter: /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/pamunkeyriver_2019_sw_WHONDRS-S19S_0054_MT_trimmed.anqrpht.fastq
+  any_name_you_want: 
+    R1: something_R1.fastq.gz
+    R2: something_R2.fastq.gz 
+    # Alternately
+    inter: something_interleaved.fastq.gz
   # This is one database file should it be more?
   # You set both the input and output for the database, that bowtie2 will use. These files may be used for many
   # analisies so the output file can be in a central location so it dose not need to be remade. 
-  bowtie2_database_raw: /home/projects-wrighton/EMERGE/EMERGE_metaTs/2016/concat_mapping/97dRep_scaffolds_combined.fa
-  bowtie2_database_built: resources/bowtie2_databases/full_db
-  # bowtie2_database_raw:  test_data/vari_size_inputs/database_3412_size.fa
-  # bowtie2_database_built: resources/bowtie2_databases/database_3412_cores_10
-  gff: /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/all_bins/dRep_v2.6.2/dereplicated_genomes/merged_annotations_drep_bins/genes_no_rna_fix.gff
+  bowtie2_database_raw: an/fa/file/for/bowtie2.fa
+  bowtie2_database_built: resources/bowtie2_databases/full_db # The permanent home for the database
+  gff: the/genes/file.gff # only for meta-t
+  fasta_dir: the/dir/of/fastas # only for meta-g
+
 # You will probably not use this part 75% of the time.
 outputs:
   get_quality: False
@@ -76,7 +34,7 @@ outputs:
 binning:
   forward_id: '_1'
   backward_id: '_2'
-  sickle_quality_type: 'sanger' # options inclued 'sanger' and 'illumina' 
+  sickle_quality_type: 'sanger' # options include 'sanger' and 'illumina' 
 coverm:
   min_read_percent_identity_pair: 0.95
   min_covered_fraction: 0.75
@@ -84,13 +42,12 @@ coverm:
   genome_fasta_extension: 'fa'
   sequence_lenth: 100
   calculate_per_seq_length: False
-  fasta_dir: '/home/projects-wrighton/NIH_Salmonella/Salmonella/Metagenomes/MAG_database/MQ_HQ_bins/bins/MQHQ_fastas/scaffolds_renamed' 
 counting:
   percent_read: 95 # For Rich sam_file.py: percent of (read_length - mismatches)/read_length to keep EX: 90
   max_mismatch: 3 # For Rich sam_file.py: max number of mismatches
   featuretype: 'CDS' # For workflow/scripts/flexcount.py: Feature type (3rd column in GTF file) to be used, all features of other type are ignored
   stranded: 'reverse'
-  idattr: 'ID' # For workflow/scripts/flexcount.py: GTF attribute to be used as feature ID (default, suitable for Ensembl GTF files: gene_id). 
+  idattr: 'ID' # For workflow/scripts/flexcount.py: GTF attribute to be used as feature ID (default, suitable for Ensemble GTF files: gene_id). 
 backend:
   report: "report/workflow.rst"
   check_fasta_for_dups: True
