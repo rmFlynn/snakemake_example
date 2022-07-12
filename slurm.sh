@@ -9,9 +9,14 @@
 #SBATCH --partition=debug
 #SBATCH --output=snakemake_main_%j.out
 
+
+
+# mv ./results/all_counts.tsv ./results/all_counts_first_30.tsv
+
 source /opt/Miniconda2/miniconda2/bin/activate scripts
 
-cd /home/projects-wrighton-2/projects-flynn/rmnp_pipeline/test_runs_of_pipline/jun_23_metat_check/RMNP_pipline
-
-rm 
-snakemake --profile slurm -j 5 -c 20 --rerun-incomplete --keep-incomplete --notemp 
+snakemake --profile slurm -j 20 -c 3  --keep-incomplete --notemp --dry-run
+snakemake --profile slurm -j 6 -c 20 --rerun-incomplete --keep-incomplete --notemp --dag | dot -Tpdf > dag.pdf
+realpath dag.pdf
+snakemake --profile slurm -j 25 -c 1  --keep-incomplete --notemp
+# 

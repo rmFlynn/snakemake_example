@@ -35,7 +35,7 @@ rule coverm_reads_per_base:
     output:
         base = temp("results/coverm/{sample}_coverm_reads_per_base.tsv"),
         sats = temp("results/coverm/stats_{sample}_coverm_reads_per_base.tsv")
-    conda: "some_env"
+    # conda: "some_env"
     params:
         min_read_percent_identity_pair= config['coverm']['min_read_percent_identity_pair'],
         min_covered_fraction= config['coverm']['min_covered_fraction'],
