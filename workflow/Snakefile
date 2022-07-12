@@ -3,7 +3,7 @@
 # https://snakemake.readthedocs.io/en/stable/snakefiles/best_practices.html,
 # in particular regarding the standardized folder structure mentioned there. 
 
-from workflow.scripts.setup_tools import get_sample_dict
+from workflow.utils.setup_tools import get_sample_dict
 import pandas as pd # used in stats file
 
 
@@ -11,42 +11,52 @@ configfile: "config/config.yaml"
 
 
 
-SAMPLE_DICT = get_sample_dict(config)
+# SAMPLE_DICT = get_sample_dict(config)
+# 
+# wildcard_constraints:
+#     sample = '|'.join(SAMPLE_DICT.keys())
 
-wildcard_constraints:
-    sample = '|'.join(SAMPLE_DICT.keys())
 
+# rule all:
+#     input: 
+#          expand("results/read_quality/{sample}_raw", sample=SAMPLE_DICT.keys() if config['outputs']['get_quality'] else []),
+#          expand("results/read_quality/{sample}_trimmed_filtered", sample=SAMPLE_DICT.keys() if config['outputs']['get_quality'] else [] ),
+#          expand("results/{sample}.bam", sample=SAMPLE_DICT.keys() if config['outputs']['get_bams'] else []),
+#          #expand("results/sample_sizes.tsv", proxy=[None] if config['outputs']['get_stats'] else []),
+#          expand("results/all_counts.tsv", proxy=[None] if config['outputs']['get_counts'] and config['type'] == 'meta_t' else []),
+#          expand("results/coverm/{sample}_coverm_trimmed_zeroed.tsv", sample=SAMPLE_DICT.keys() 
+#                          if config['type'] == 'meta_g' else []),
+#          expand("results/coverm/{sample}_coverm_trimmed_filtered.tsv", sample=SAMPLE_DICT.keys()
+#                          if config['type'] == 'meta_g' else []),
 
 rule all:
     input: 
-         expand("results/read_quality/{sample}_raw", sample=SAMPLE_DICT.keys() if config['outputs']['get_quality'] else []),
-         expand("results/read_quality/{sample}_trimmed_filtered", sample=SAMPLE_DICT.keys() if config['outputs']['get_quality'] else [] ),
-         expand("results/{sample}.bam", sample=SAMPLE_DICT.keys() if config['outputs']['get_bams'] else []),
-         expand("results/sample_sizes.tsv", proxy=[None] if config['outputs']['get_stats'] else []),
-         expand("results/all_counts.tsv", proxy=[None] if config['outputs']['get_counts'] else [])
+         "results/all_counts.tsv",
          
+# Other rules
+# include: "rules/binning.smk"
+# include: "rules/bowtie2.smk"
+include: "rules/counting.smk"
+# include: "rules/coverm.smk"
 
-rule stats_file:
-    input:
-        r1=[SAMPLE_DICT[i]['forward_gz'] for i in SAMPLE_DICT],
-        r2=[SAMPLE_DICT[i]['reversed_gz'] for i in SAMPLE_DICT],
-        bowtie_DB=config['inputs']['bowtie2_database_raw']
-    output:
-        "results/sample_sizes.tsv"
-    threads: 
-        workflow.cores
-    run:
-        stats_df = pd.DataFrame({
-            "r1_size": [os.stat(i).st_size for i in input.r1],
-            "r2_size": [os.stat(i).st_size for i in input.r2],
-            "sample": [i for i in SAMPLE_DICT]})
-        stats_df["database_size"] = os.stat(input.bowtie_DB).st_size
-        stats_df["threads"] = threads
-        stats_df.to_csv(output[0], sep='\t')
+# True reakpoint()
+# rule stats_file:
+#     input:
+#         r1=[SAMPLE_DICT[i]['forward_gz'] for i in SAMPLE_DICT],
+#         r2=[SAMPLE_DICT[i]['reversed_gz'] for i in SAMPLE_DICT],
+#         bowtie_DB=config['inputs']['bowtie2_database_raw']
+#     output:
+#         "results/sample_sizes.tsv"
+#     threads: 
+#         workflow.cores
+#     run:
+#         stats_df = pd.DataFrame({
+#             "r1_size": [os.stat(i).st_size for i in input.r1],
+#             "r2_size": [os.stat(i).st_size for i in input.r2],
+#             "sample": [i for i in SAMPLE_DICT]})
+#         stats_df["database_size"] = os.stat(input.bowtie_DB).st_size
+#         stats_df["threads"] = threads
+#         stats_df.to_csv(output[0], sep='\t')
        
 
-# Other rules
-include: "rules/binning.smk"
-include: "rules/bowtie2.smk"
-include: "rules/counting.smk"
 
