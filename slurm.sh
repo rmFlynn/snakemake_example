@@ -10,11 +10,12 @@
 #SBATCH --output=snakemake_main_%j.out
 
 source /opt/Miniconda2/miniconda2/bin/activate scripts
+snakemake -j 7 -c 1 --rerun-incomplete --notemp --dry-run
 
-cd /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaG_mapping/coverm_MetaG_merger_test/mini_pipline
+# cd /home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaG_mapping/coverm_MetaG_merger_test/mini_pipline
 
 # snakemake --profile slurm -j 4 -c 20 --dag | dot -Tpdf > dag.pdf
-# snakemake --profile slurm -j 4 -c 30 --rerun-incomplete --notemp --cluster-cancel scancel
+snakemake --profile slurm -c 30 --rerun-incomplete --notemp 
 snakemake -j 7 -c 1 --rerun-incomplete --notemp
-snakemake -j 7 -c 1 --rerun-incomplete --notemp --dry-run
+
 

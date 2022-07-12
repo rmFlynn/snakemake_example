@@ -1,20 +1,21 @@
 """
-Here we both run coverM and combine the output to make the coverm_trimmed_zero data and the coverm_trimed_filterd data sets, the option to make one or both is in the config, it the coverm section. 
+Here we both run coverM and combine the output using a more complex algorithum, to make the coverm_trimmed_zero data all the data with 0s inserted and the coverm_trimed_filterd data sets, the option to make one or both is in the config, in the coverm section. 
+After coverm joiner joins the coverm runs for a sample the coverm_merger merges the sample into one ouput file 
 """
 COVERM_ENV = '../envs/coverm.yaml'
 
-BAM = "/home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaG_mapping/mapping_bowtie_012722/{sample}.bam"
-FASTA_DIR = '/home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/DRAM_renamed_bins' 
+# BAM = "/home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaG_mapping/mapping_bowtie_012722/{sample}.bam"
+# FASTA_DIR = '/home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/DRAM_renamed_bins' 
 
-SAMPLES=[ os.path.basename(i)[:-4] for i in 
-                glob("/home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaG_mapping/mapping_bowtie_012722/*sorted.bam")]
-wildcard_constraints:
-    sample = '|'.join(SAMPLES)
+# SAMPLES=[ os.path.basename(i)[:-4] for i in 
+#                 glob("/home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaG_mapping/mapping_bowtie_012722/*sorted.bam")]
+# wildcard_constraints:
+#     sample = '|'.join(SAMPLES)
 
 rule coverm_trimmed_mean:
     input: 
-        bam = BAM,
-        fasta_dir = FASTA_DIR
+        bam = "results/{sample}.bam",
+        fasta_dir = config['coverm']['fasta_dir']
     output:
         mean = temp("results/coverm/{sample}_coverm_trimmed_mean.tsv"),
         stats = temp("results/coverm/stats_{sample}_coverm_trimmed_mean.tsv")
@@ -42,8 +43,8 @@ rule coverm_trimmed_mean:
 
 rule coverm_reads_per_base:
     input: 
-        bam = BAM,
-        fasta_dir = FASTA_DIR
+        bam = "results/{sample}.bam",
+        fasta_dir = config['coverm']['fasta_dir']
     output:
         base = temp("results/coverm/{sample}_coverm_reads_per_base.tsv"),
         stats = temp("results/coverm/stats_{sample}_coverm_reads_per_base.tsv")
@@ -75,8 +76,8 @@ rule coverm_reads_per_base:
 
 rule coverm_covered_fraction:
     input: 
-        bam = BAM,
-        fasta_dir = FASTA_DIR
+        bam = "results/{sample}.bam",
+        fasta_dir = config['coverm']['fasta_dir']
     output:
         frac = temp("results/coverm/{sample}_coverm_covered_fraction.tsv"),
         stats = temp("results/coverm/stats_{sample}_coverm_covered_fraction.tsv")
@@ -111,7 +112,7 @@ rule coverm_join:
         mean = "results/coverm/{sample}_coverm_trimmed_mean.tsv",
         frac = "results/coverm/{sample}_coverm_covered_fraction.tsv",
         base = "results/coverm/{sample}_coverm_reads_per_base.tsv",
-        bam = BAM
+        bam = "results/{sample}.bam"
     output:
         zero = "results/coverm/{sample}_coverm_trimmed_zeroed.tsv",
         filt = "results/coverm/{sample}_coverm_trimmed_filtered.tsv"
@@ -127,8 +128,7 @@ rule coverm_join:
 rule coverm_merge:
     input:
         expand("results/coverm/{sample}_coverm_trimmed_zeroed.tsv", 
-               sample=SAMPLES
-               )
+               sample=SAMPLE_DICT.keys())
     output:
         "results/coverm_all_output_merged.tsv"
     run:

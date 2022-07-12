@@ -130,7 +130,7 @@ rule sickle_trimreads:
     threads: 
         1
     resources:
-        mem=lambda wildcards, input, attempt: (input.size//100000000) * attempt * 10,
+        mem= 7,
         time='1-00:00:00'
     benchmark:
         "benchmarks/sickle_trim_reads/{sample}_bin.tsv"
