@@ -22,6 +22,19 @@ The pipeline is based on snakemake and benifits from snakemakes tools.
    :maxdepth: 2
    :caption: Contents:
 
+## Usage
+### Lets Go Step by Step!
+#### First clone this git repository:
+```
+git clone https://github.com/WrightonLabCSU/RMNP_pipline.git
+```
+The fact that the full pipeline is under git version control is key, although you don’t need to commit your changes they are automatically being tracked locally and can be used to find problems. It will for example track the changes to the config file in the next section
+
+Change directories to the new folder you just made with the git command `cd RMNP_pipline` this is where the rest of this tutorial will assume your working directory is. 
+
+#### Edit the Config File
+
+Change directories to 
 
 Explaining the pipeline
 =====================
