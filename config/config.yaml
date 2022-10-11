@@ -2,20 +2,20 @@
 type: 'meta_t' # type can be 'meta_t' or 'meta_g'
 inputs:
   interleaved_reads:
-     - read1.fastq
-     - read2.fastq
+     #>- read1.fastq
+     #>- read2.fastq
      # alternately
-     - folder/path/*.fastq
+     #>- folder/path/*.fastq
   paired_reads:
     #- '/path/one/name1*.fastq*'
     #- '/path/two/name2*.fastq*'
   named_reads:
   # Here you can put nothing, or asmany reads as you want with the format: 
   any_name_you_want: 
-    R1: something_R1.fastq.gz
-    R2: something_R2.fastq.gz 
+    #>R1: something_R1.fastq.gz
+    #>R2: something_R2.fastq.gz 
     # Alternately
-    inter: something_interleaved.fastq.gz
+    #>inter: something_interleaved.fastq.gz
   # This is one database file should it be more?
   # You set both the input and output for the database, that bowtie2 will use. These files may be used for many
   # analisies so the output file can be in a central location so it dose not need to be remade. 
