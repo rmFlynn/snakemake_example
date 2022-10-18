@@ -52,30 +52,36 @@ You need to edit the config file to fit your use case. There is a crazy number o
 
  - Set the paths to FASTAs. There are many options depending on how your data is organized, FASTAs are so fun like that. You can use interleaved or non interleaved reads, impute ore ascribe names to the FASTAs, and you can add them as zipped or unzipped files.
 
-   ``
-     inputs:
-      interleaved_reads:
-         #>- read1.fastq
-         #>- read2.fastq
-         # alternately
-         #>- folder/path/*.fastq
-      paired_reads:
-        #- '/path/one/name1*.fastq*'
-        #- '/path/two/name2*.fastq*'
-      named_reads:
-      # Here you can put nothing, or asmany reads as you want with the format:
-      any_name_you_want:
-        #>R1: something_R1.fastq.gz
-        #>R2: something_R2.fastq.gz
-        # Alternately
-        #>inter: something_interleaved.fastq.gz
-      # This is one database file should it be more?
-      # You set both the input and output for the database, that bowtie2 will use. These files may be used for many
-   ``
+   ``inputs:
+     interleaved_reads:
+        #>- read1.fastq
+        #>- read2.fastq
+        # alternately
+        #>- folder/path/*.fastq
+     paired_reads:
+       #- '/path/one/name1*.fastq*'
+       #- '/path/two/name2*.fastq*'
+     named_reads:
+     # Here you can put nothing, or asmany reads as you want with the format:
+     any_name_you_want:
+       #>R1: something_R1.fastq.gz
+       #>R2: something_R2.fastq.gz
+       # Alternately
+       #>inter: something_interleaved.fastq.gz
+     # This is one database file should it be more?
+     # You set both the input and output for the database, that bowtie2 will use. These files may be used for many``
 
    One side note is that if you use the paired_reads as your input, you need to also check that the forward and reversed reads are identified constantly with the strings in the binning section. We discuss this in the next section.
 
- - You also need to
+ - You also need to set two locations for bowtie2 if you are making a database for this run. You can of coarse not set a location for the raw if you are using a pre-built db. However, if you do make the database you should definitely save it in a good place so it can be used latter.
+
+   ``bowtie2_database_raw: an/fa/file/for/bowtie2.fa
+     bowtie2_database_built: resources/bowtie2_databases/full_db # The permanent home for the database``
+
+ - Then set a few more location.
+
+   ``gff: the/genes/file.gff # only for meta-t
+     fasta_dir: the/dir/of/fastas # only for meta-g``
 
 
 Usage: Explaining the pipeline
