@@ -34,11 +34,49 @@ git clone https://github.com/WrightonLabCSU/RMNP_pipline.git
 
 The fact that the full pipeline is under git version control is key, although you don’t need to commit your changes they are automatically being tracked locally and can be used to find problems. It will for example track the changes to the config file in the next section
 
-Change directories to the new folder you just made with the git command `cd RMNP_pipline` this is where the rest of this tutorial will assume your working directory is.
+Change directories to the new folder you just made with the git command ``cd RMNP_pipline`` this is where the rest of this tutorial will assume your working directory is.
 
-#### Edit the Config File
 
-Change directories to
+Edit the Config File
+-------------------------
+
+You need to edit the config file to fit your use case. There is a crazy number of options in this file but most are self explanatory, and you will not need to change all of them
+
+ - The config lives in the config directory, and is a yaml file wich is a fancy sort of text file so open it up with your favorite text editor be that the one on you desktop or nano or vi/vim/neovim. Then you can tweak these settings.
+
+   ``vi config/config.yaml``
+
+ - First set the type of analyse you want to do there are two options
+
+   ``type: 'meta_t' # type can be 'meta_t' or 'meta_g'``
+
+ - Set the paths to FASTAs. There are many options depending on how your data is organized, FASTAs are so fun like that. You can use interleaved or non interleaved reads, impute ore ascribe names to the FASTAs, and you can add them as zipped or unzipped files.
+
+   ``
+     inputs:
+      interleaved_reads:
+         #>- read1.fastq
+         #>- read2.fastq
+         # alternately
+         #>- folder/path/*.fastq
+      paired_reads:
+        #- '/path/one/name1*.fastq*'
+        #- '/path/two/name2*.fastq*'
+      named_reads:
+      # Here you can put nothing, or asmany reads as you want with the format:
+      any_name_you_want:
+        #>R1: something_R1.fastq.gz
+        #>R2: something_R2.fastq.gz
+        # Alternately
+        #>inter: something_interleaved.fastq.gz
+      # This is one database file should it be more?
+      # You set both the input and output for the database, that bowtie2 will use. These files may be used for many
+   ``
+
+   One side note is that if you use the paired_reads as your input, you need to also check that the forward and reversed reads are identified constantly with the strings in the binning section. We discuss this in the next section.
+
+ - You also need to
+
 
 Usage: Explaining the pipeline
 =====================
