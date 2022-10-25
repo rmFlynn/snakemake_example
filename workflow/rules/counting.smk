@@ -3,82 +3,81 @@
 
 import os
 from glob import glob
-SAMPLES = [os.path.basename(i)[:-11] for i in glob("/home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/*_sorted.bam")]
 
 
-# rule reformat_sam:
-#     input:
-#        sam_in="results/bowtie2/{sample}.sam"
-#     output:
-#        sam_out=temp("results/counting/{sample}.reformatted.sam")
-#     threads: workflow.cores
-#     # log:
-#     #     "logs/{sample}/reformat_sam.log"
-#     benchmark:
-#         "benchmarks/reformat_sam/{sample}.tsv"
-#     shell:
-#        """
-#        reformat.sh \\
-#            in={input.sam_in}\\
-#            out={output.sam_out} \\
-#            minidfilter=1 \\
-#            primaryonly=t pairedonly=f
-#        """
-# 
-# 
-# rule samtools_sam_sort:
-#     input:
-#        sam_in="results/counting/{sample}.reformatted.sam"
-#     output:
-#        sam_out=temp("results/counting/{sample}.sorted.reformatted.sam")
-#     threads: workflow.cores
-#     benchmark:
-#         "benchmarks/samtools_sam_to_bam/{sample}.tsv"
-#     # log:
-#     #     "logs/{sample}/samtools_sam_sort.log"
-#     shell:
-#        """
-#        samtools sort -n -@ {threads} -o {output} {input}
-#        """
-# 
-# 
-# rule rich_script_sam_file:
-#     input:
-#        sam_in="results/counting/{sample}.sorted.reformatted.sam"
-#     output:
-#        sam_out=temp("results/counting/{sample}.final.sam")
-#     threads: workflow.cores
-#     params:
-#        percent_read=config['counting']['percent_read'],
-#        max_mismatch=config['counting']['max_mismatch'],
-#        mult_align='T'
-#     benchmark:
-#         "benchmarks/rich_script_sam_file/{sample}.tsv"
-#     shell:
-#        """
-#        /usr/bin/python /ORG-Data/scripts/sam_file.py \\
-#                        -i {input.sam_in} \\
-#                        -o {output.sam_out} \\
-#                        --percent_read {params.percent_read} \\
-#                        --max_mismatch {params.max_mismatch} \\
-#                        --mult_align {params.mult_align}
-#        """
+rule reformat_sam:
+    input:
+       sam_in="results/bowtie2/{sample}.sam"
+    output:
+       sam_out=temp("results/counting/{sample}.reformatted.sam")
+    threads: workflow.cores
+    # log:
+    #     "logs/{sample}/reformat_sam.log"
+    benchmark:
+        "benchmarks/reformat_sam/{sample}.tsv"
+    shell:
+       """
+       reformat.sh \\
+           in={input.sam_in}\\
+           out={output.sam_out} \\
+           minidfilter=1 \\
+           primaryonly=t pairedonly=f
+       """
 
-# rule bam_to_sam:
-#     input:
-#        bam="/home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/{sample}_sorted.bam",
-#     output:
-#        sam=temp("results/counting/{sample}.final.sam"),
-#     resources:
-#         mem=1000,
-#         time='1-00:00:00'
-#     threads: 1
-#     shell:
-#             "samtools view -h {input.bam} > {output.sam}"
+
+rule samtools_sam_sort:
+    input:
+       sam_in="results/counting/{sample}.reformatted.sam"
+    output:
+       sam_out=temp("results/counting/{sample}.sorted.reformatted.sam")
+    threads: workflow.cores
+    benchmark:
+        "benchmarks/samtools_sam_to_bam/{sample}.tsv"
+    # log:
+    #     "logs/{sample}/samtools_sam_sort.log"
+    shell:
+       """
+       samtools sort -n -@ {threads} -o {output} {input}
+       """
+
+
+rule rich_script_sam_file:
+    input:
+       sam_in="results/counting/{sample}.sorted.reformatted.sam"
+    output:
+       sam_out=temp("results/counting/{sample}.final.sam")
+    threads: workflow.cores
+    params:
+       percent_read=config['counting']['percent_read'],
+       max_mismatch=config['counting']['max_mismatch'],
+       mult_align='T'
+    benchmark:
+        "benchmarks/rich_script_sam_file/{sample}.tsv"
+    shell:
+       """
+       /usr/bin/python /ORG-Data/scripts/sam_file.py \\
+                       -i {input.sam_in} \\
+                       -o {output.sam_out} \\
+                       --percent_read {params.percent_read} \\
+                       --max_mismatch {params.max_mismatch} \\
+                       --mult_align {params.mult_align}
+       """
+
+rule bam_to_sam:
+    input:
+       bam="results/counting/{sample}_sorted.bam",
+    output:
+       sam=temp("results/counting/{sample}.final.sam"),
+    resources:
+        mem=1000,
+        time='1-00:00:00'
+    threads: 1
+    shell:
+            "samtools view -h {input.bam} > {output.sam}"
 
 rule counting:
     input:
-       sam="/home/projects-wrighton-2/GROWdb/USAfocus_FinalBins110121/dereplicated_bin_analyses/metaT_mapping/bowtie_mapping_final/{sample}_sorted.bam",
+       sam="results/counting/{sample}.final.sam",
        gff=config['inputs']['gff']
     output:
         temp('results/counting/{sample}.counts.tsv')
@@ -113,7 +112,7 @@ rule counting:
 
 rule join_counting:
     input:
-       expand("results/counting/{sample}.counts.tsv", sample=SAMPLES)
+       expand("results/counting/{sample}.counts.tsv", sample=list(SAMPLE_DICT.keys()))
     output:
       "results/all_counts.tsv"
     threads: 

@@ -19,7 +19,7 @@ source /opt/Miniconda2/miniconda2/bin/activate scripts
 # Normal run
 #> snakemake --profile slurm -j 25 -c 1  --keep-incomplete --notemp
 # Debug dry run
-#>snakemake --profile slurm -j 20 -c 3  --keep-incomplete --notemp --dry-run
+snakemake --profile slurm -j 3 -c 30  --keep-incomplete --notemp --dry-run
 # Debug run
 #> snakemake --profile slurm -j 25 -c 1  --keep-incomplete --notemp
 # Make a visual of what you will run

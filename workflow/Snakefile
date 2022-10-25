@@ -4,8 +4,7 @@
 # in particular regarding the standardized folder structure mentioned there. 
 
 from workflow.utils.setup_tools import get_sample_dict
-import pandas as pd # used in stats file
-
+import pandas as pd
 
 configfile: "config/config.yaml"
 
@@ -17,7 +16,6 @@ wildcard_constraints:
 
 rule all:
     input: 
-         "results/all_counts.tsv",
          expand("results/read_quality/{sample}_raw", sample=SAMPLE_DICT.keys() if config['outputs']['get_quality'] else []),
          expand("results/read_quality/{sample}_trimmed_filtered", sample=SAMPLE_DICT.keys() if config['outputs']['get_quality'] else [] ),
          expand("results/{sample}.bam", sample=SAMPLE_DICT.keys() if config['outputs']['get_bams'] else []),

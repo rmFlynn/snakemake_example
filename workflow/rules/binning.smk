@@ -101,8 +101,8 @@ rule bbduk_trim_reads:
     threads: 
         workflow.cores
     resources:
-        mem=lambda wildcards, input, attempt: (input.size//1000000000) * attempt * 10,
-        time='1-00:00:00'
+        mem=lambda wildcards, input, attempt: (input.size//1000000) * attempt,
+        time='3-00:00:00'
     # log:
     #     "logs/{sample}/bbduk_trim_reads.log"
     benchmark:
@@ -219,40 +219,3 @@ rule deinterleave_fastq:
        """
        bash /ORG-Data/scripts/deinterleave_fastq.sh < {input.file} {output.r1}  {output.r2}
        """
-
-
-"""
-If you have separate files for forward and reverse reads:
-Usage: sickle pe [options] -f <paired-end forward fastq file> -r <paired-end reverse fastq file> -t <quality type> -o <trimmed PE forward file> -p <trimmed PE reverse file> -s <trimmed singles file>
-
-If you have one file with interleaved forward and reverse reads:
-Usage: sickle pe [options] -c <interleaved input file> -t <quality type> -m <interleaved trimmed paired-end output> -s <trimmed singles file>
-
-If you have one file with interleaved reads as input and you want ONLY one interleaved file as output:
-Usage: sickle pe [options] -c <interleaved input file> -t <quality type> -M <interleaved trimmed output>
-Paired-end separated reads
---------------------------
--f, --pe-file1, Input paired-end forward fastq file (Input files must have same number of records)
--r, --pe-file2, Input paired-end reverse fastq file
--o, --output-pe1, Output trimmed forward fastq file
--p, --output-pe2, Output trimmed reverse fastq file. Must use -s option.
-
-Paired-end interleaved reads
-----------------------------
--c, --pe-combo, Combined (interleaved) input paired-end fastq
--m, --output-combo, Output combined (interleaved) paired-end fastq file. Must use -s option.
--M, --output-combo-all, Output combined (interleaved) paired-end fastq file with any discarded read written to output file as a single N. Cannot be used with the -s option.
-
-Global options
---------------
--t, --qual-type, Type of quality values (solexa (CASAVA < 1.3), illumina (CASAVA 1.3 to 1.7), sanger (which is CASAVA >= 1.8)) (required)
--s, --output-single, Output trimmed singles fastq file
--q, --qual-threshold, Threshold for trimming based on average quality in a window. Default 20.
--l, --length-threshold, Threshold to keep a read based on length after trimming. Default 20.
--x, --no-fiveprime, Don't do five prime trimming.
--n, --truncate-n, Truncate sequences at position of first N.
--g, --gzip-output, Output gzipped files.
---quiet, do not output trimming info
---help, display this help and exit
---version, output version information and exit
-"""
