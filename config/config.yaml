@@ -1,5 +1,5 @@
 # You will want to fill this out for each run, it should be fine to clone this repo for each run.
-# In this document actual code is comented "#> " and the commets are just "# " if you want to use the code remove the "#> " 
+# In this document actual code is commented "#> " and the comments are just "# " if you want to use the code remove the "#> " but nothing else 
 type: 'meta_t' # type can be 'meta_t' or 'meta_g'
 inputs:
   interleaved_reads: 
@@ -9,7 +9,6 @@ inputs:
      # alternately
      #> - folder/path/*.fastq
   paired_reads: 
-     - /home/projects-wrighton/NIH_Salmonella/Salmonella/Metatranscriptomics/SalmonellaMetaTreads/raw_reads_for_RMNP_validation/*.fastq ###Kai- got error trying to run with paired_reads so had to interleave to make work
     #- '/path/one/name1*.fastq*'
     #- '/path/two/name2*.fastq*'
   named_reads: 
@@ -26,7 +25,6 @@ inputs:
   bowtie2_database_built: resources/bowtie2_databases/full_db # The permanent home for the database
   gff: the/genes/file.gff # only for meta-t
 
-# These are specifi to dram
 outputs:
   get_quality: False
   get_counts: True
@@ -45,6 +43,7 @@ coverm:
   genome_fasta_extension: 'fa'
   sequence_lenth: 100
   calculate_per_seq_length: False
+  # This only needs to point to a real path if you are doing meta_g
   fasta_dir: the/dir/of/fastas
 counting:
   percent_read: 95 # For Rich sam_file.py: percent of (read_length - mismatches)/read_length to keep EX: 90
