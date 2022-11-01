@@ -125,3 +125,27 @@ rule join_counting:
             shell(f"sed 1,1d {i} >> {output}")
 
 
+"""This will merge them in the sql sense"""
+
+rule merge_counting:
+    input:
+       [f"results/counting/{i}.counts.tsv" for i in SAMPLE_DICT.keys()]
+    output:
+      "results/merged_total_counts.tsv"
+    threads: 
+       1
+    conda:
+        '../envs/merge.yaml'
+    benchmark:
+        "benchmarks/merge_counting.tsv"
+    params:
+       tsvs = ' -f '.join([f"results/counting/{i}.counts.tsv" for i in SAMPLE_DICT.keys()]),
+       names = ' -n '.join(list(SAMPLE_DICT.keys()))
+    shell:
+            """
+            python3 workflow/scripts/pd_merger_files.py \\
+             -f {params.tsvs} \\
+             -n {params.names} \\
+             -o {output}
+
+            """
