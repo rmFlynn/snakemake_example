@@ -1,47 +1,50 @@
 # You will want to fill this out for each run, it should be fine to clone this repo for each run.
+# In this document actual code is commented "#> " and the comments are just "# " if you want to use the code remove the "#> " but nothing else 
 type: 'meta_t' # type can be 'meta_t' or 'meta_g'
 inputs:
-  interleaved_reads:
-     - read1.fastq
-     - read2.fastq
+  interleaved_reads: 
+    # these need to be formated like below with - at the start this is becouse they are yaml lists
+     #> - read1.fastq
+     #> - read2.fastq
      # alternately
-     - folder/path/*.fastq
-  paired_reads:
+     #> - folder/path/*.fastq
+  paired_reads: 
     #- '/path/one/name1*.fastq*'
     #- '/path/two/name2*.fastq*'
-  named_reads:
+  named_reads: 
   # Here you can put nothing, or asmany reads as you want with the format: 
   any_name_you_want: 
-    R1: something_R1.fastq.gz
-    R2: something_R2.fastq.gz 
+    #>31: something_R1.fastq.gz
+    #>R2: something_R2.fastq.gz 
     # Alternately
-    inter: something_interleaved.fastq.gz
+    #>inter: something_interleaved.fastq.gz
   # This is one database file should it be more?
   # You set both the input and output for the database, that bowtie2 will use. These files may be used for many
   # analisies so the output file can be in a central location so it dose not need to be remade. 
   bowtie2_database_raw: an/fa/file/for/bowtie2.fa
   bowtie2_database_built: resources/bowtie2_databases/full_db # The permanent home for the database
   gff: the/genes/file.gff # only for meta-t
-  fasta_dir: the/dir/of/fastas # only for meta-g
 
-# You will probably not use this part 75% of the time.
 outputs:
   get_quality: False
-  get_counts: False
+  get_counts: True
   get_stats: False
   get_bams: True 
-  get_coverm: True
+  get_coverm: False
 binning:
-  forward_id: '_1'
-  backward_id: '_2'
+  forward_id: '_R1'
+  backward_id: '_R2'
   sickle_quality_type: 'sanger' # options include 'sanger' and 'illumina' 
-coverm:
+# only for meta-g
+coverm: 
   min_read_percent_identity_pair: 0.95
   min_covered_fraction: 0.75
   min_depth: 3
   genome_fasta_extension: 'fa'
   sequence_lenth: 100
   calculate_per_seq_length: False
+  # This only needs to point to a real path if you are doing meta_g
+  fasta_dir: the/dir/of/fastas
 counting:
   percent_read: 95 # For Rich sam_file.py: percent of (read_length - mismatches)/read_length to keep EX: 90
   max_mismatch: 3 # For Rich sam_file.py: max number of mismatches
@@ -51,5 +54,4 @@ counting:
 backend:
   report: "report/workflow.rst"
   check_fasta_for_dups: True
-
 

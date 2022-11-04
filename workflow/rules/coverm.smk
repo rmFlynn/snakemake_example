@@ -44,7 +44,7 @@ rule coverm_trimmed_mean:
 rule coverm_reads_per_base:
     input: 
         bam = "results/{sample}.bam",
-        fasta_dir = config['input']['fasta_dir']
+        fasta_dir = config['coverm']['fasta_dir']
     output:
         base = temp("results/coverm/{sample}_coverm_reads_per_base.tsv"),
         stats = temp("results/coverm/stats_{sample}_coverm_reads_per_base.tsv")
