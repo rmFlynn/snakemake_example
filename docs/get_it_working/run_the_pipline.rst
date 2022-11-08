@@ -1,71 +1,44 @@
-.. RMNP_Pipeline documentation pipline file file, created by
-.. Rory on what ever day this is.
+.. RMNP_Pipeline documentation pipeline file, created by
+.. Rory on whatever day this is.
 
-.. get_it_working-configure_the_pipline:
+.. _get_it_working-run_the_pipline:
 
 =========================================
-Lets run This Pipeline!
+Let's run This Pipeline!
 =========================================
 
 
-If you are here then hopefuly:
+This part is straightforward, but still should be followed closely. Recall that a comment is just a ``#`` and example code is ``#>``.
 
-First clone/download the repository this git repository:
--------------------------
+Because we use Slurm as part of the pipeline, it only makes sense to run this pipeline in a slurm session itself.
+The session can be very small, it just needs to monitor the pipeline, you can of course run this in a screen if that is your preference.
+The code below is a jumping off point to get you started using Snakemake
 
-```
-git clone https://github.com/WrightonLabCSU/RMNP_pipline.git
-```
+.. literalinclude:: ../../slurm.sh
+     :language: YAML
+     :linenos:
 
-The fact that the full pipeline is under git version control is key, although you don’t need to commit your changes they are automatically being tracked locally and can be used to find problems. It will for example track the changes to the config file in the next section
 
-Change directories to the new folder you just made with the git command ``cd RMNP_pipline`` this is where the rest of this tutorial will assume your working directory is.
+What Makes a Snakemake Command
+______
 
-If you can't use git in your instance, or it is more troble than it is worth you can download the data from here
+Snakemake is run with the command ``snakemake``, using this command from the root of the pipeline. It will then find the Snakefile in the workflow directory.
+When using Snakemake with Slurm, a command needs 3 things to be valid.
 
-Edit the Config File
--------------------------
+ -  A slurm profile, this describes default arguments for Slurm, and the user specific settings for Slurm to run. You should have this by following the steps in :ref:`get_it_working-before_you_start`. use ``--profile`` to call it, if it is named Slurm like in this tutorial then it will be ``--profile slurm``.
+ - The number of jobs that Slurm can run simultaneously. There may be a limit to how many jobs a person can have in the queue at a time. Most people have paid too much for their HPC for it to be half empty, so you may want to set this high, even if that means jobs in the queue.
+   Use ``-j`` for this, for example ``-j 10``
+ - The number of cores the jobs can demand. Note that the Snakemake profile will limit the number of cores in a single threaded job. But some jobs will try to run as many threads as possible.
+   This limits the number of cores a max size job can have. The person running your HPC most likely gave you an upper limit, but you can run more jobs at a time if this number is lower. An example of this argument would be ``-c 10``
 
-You need to edit the config file to fit your use case. There is a crazy number of options in this file but most are self explanatory, and you will not need to change all of them
+Step by Step
+____________
 
- - The config lives in the config directory, and is a yaml file wich is a fancy sort of text file so open it up with your favorite text editor be that the one on you desktop or nano or vi/vim/neovim. Then you can tweak these settings.
-
-   ``vi config/config.yaml``
-
- - First set the type of analyse you want to do there are two options
-
-   ``type: 'meta_t' # type can be 'meta_t' or 'meta_g'``
-
- - Set the paths to FASTAs. There are many options depending on how your data is organized, FASTAs are so fun like that. You can use interleaved or non interleaved reads, impute ore ascribe names to the FASTAs, and you can add them as zipped or unzipped files.
-   ::
-      inputs:
-        interleaved_reads:
-           #>- read0.fastq
-           #>- read1.fastq
-           # alternately
-           #>- folder/path/*.fastq
-        paired_reads:
-          #- '/path/one/name0*.fastq*'
-          #- '/path/two/name1*.fastq*'
-        named_reads:
-        # Here you can put nothing, or asmany reads as you want with the format:
-        any_name_you_want:
-          #>R0: something_R1.fastq.gz
-          #>R1: something_R2.fastq.gz
-          # Alternately
-          #>inter: something_interleaved.fastq.gz
-        # This is one database file should it be more?
-        # You set both the input and output for the database, that bowtie1 will use. These files may be used for many``
-
-   One side note is that if you use the paired_reads as your input, you need to also check that the forward and reversed reads are identified constantly with the strings in the binning section. We discuss this in the next section.
-
- - You also need to set two locations for bowtie1 if you are making a database for this run. You can of coarse not set a location for the raw if you are using a pre-built db. However, if you do make the database you should definitely save it in a good place so it can be used latter.
-
-   ``bowtie1_database_raw: an/fa/file/for/bowtie2.fa
-     bowtie1_database_built: resources/bowtie2_databases/full_db # The permanent home for the database``
-
- - Then set a few more location.
-
-   ``gff: the/genes/file.gff # only for meta-t
-     fasta_dir: the/dir/of/fastas # only for meta-g``
+ - first customize the Slurm settings of these files, at minimum you must put your email in.
+ - the first step is to activate an environment that has Snakemake installed, this can be done with the source command.
+   On line 15 there is an example of such a string.
+ - Next do a dry run like on line 22 this will show you how many jobs will run and if there is a problem with the pipeline it will give you the error without wasting time.
+   There is no need at all
+ - If you are doing a test run then you may now want to use the ``--keep-incomplete`` and ``--notemp`` flags like on line 24. These will prevent the erasure of temporary files on success or failure. This will let you pickup where you left off if the pipeline failed, or you need to add something to the output.
+ - If this is not a test, you can use a command like that on line 20 to start the pipeline.
 

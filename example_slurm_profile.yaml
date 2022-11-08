@@ -1,0 +1,34 @@
+cluster: # This section will set variables for slurm from those set for jobs in Snakemake
+  mkdir -p logs/{rule} &&
+  sbatch
+    --partition={resources.partition}
+    --ntasks={threads}
+    --mem={resources.mem}
+    --job-name=smk-{rule}-{wildcards}
+    --output=logs/{rule}/{rule}-{wildcards}-%j.out
+    --mail-type={resources.mail_type}
+    --mail-user={resources.mail_user}
+    # --nodelist="zenith" # If this is set things will run only on zenith
+# You will want to modify the partition and email in this section, if quotes are in the example you should keep them
+# Note that the mail type should be none or many small jobs will clog your inbox
+default-resources: # These are defaults, Snakemake will overide them, so they should be low
+  - partition=example-hi,example-low # Partition for slurm, this should be clear from other slurm jobs you have run
+  - ntasks=1
+  - node=1
+  - mem=100
+  - time="14-00:00:00"
+  - mail_type="NONE"
+# Defaults for Snakemake, not Slurm
+restart-times: 0 # number of times to restart failing jobs (default 0)
+max-jobs-per-second: 5 # max_jobs_per_second
+max-status-checks-per-second: 1 # How often the run is checked
+local-cores: 1 #  the number of provided local cores if in cluster mode (ignored without cluster support) (default 1)
+jobs: 1
+latency-wait: 60
+keep-going: False
+rerun-incomplete: False
+cluster-cancel: 'scancel' # cancel all jobs on failure or interrupt or whatever
+printshellcmds: True
+scheduler: greedy
+use-conda: True # Even if you don't use conda this must be set
+conda-prefix: '~/snake_conda_env'

@@ -14,14 +14,13 @@
 
 # mv ./results/all_counts.tsv ./results/all_counts_first_30.tsv
 
-source /opt/Miniconda2/miniconda2/bin/activate scripts
+# source /opt/Miniconda2/miniconda2/bin/activate scripts
 
 # Normal run
-#> snakemake --profile slurm -j 25 -c 1  --keep-incomplete --notemp
+#> snakemake --profile slurm -j 25 -c 10
 # Debug dry run
-snakemake --profile slurm -j 3 -c 30 --keep-incomplete --notemp --dry-run
+# snakemake --profile slurm -j 3 -c 30 --keep-incomplete --notemp --dry-run
 # Debug run
 #> snakemake --profile slurm -j 25 -c 1  --keep-incomplete --notemp
 # Make a visual of what you will run
 #>snakemake --profile slurm -j 6 -c 20 --rerun-incomplete --keep-incomplete --notemp --dag | dot -Tpdf > dag.pdf
-# 
