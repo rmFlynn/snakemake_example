@@ -25,7 +25,7 @@ inputs:
   bowtie2_database_built: resources/bowtie2_databases/full_db # The permanent home for the database
   gff: the/genes/file.gff # only for meta-t
 
-otputs:
+outputs:
   get_quality: False
   get_counts: True
   get_stats: False
